@@ -334,3 +334,91 @@ sudoers: sudo 명령에 대한 정보와 설정을 할 수 있는 파일. 사용
 - inode: 링크와 파일을 묶어주는 역할. 하나의 파일에 여러 개의 링크가 있다면 해당 링크를 하나의 inode로 묶고 해당 inode는 파일을 가르킨다.
 - 하드링크: 복사와 유사하지만 같은 파일이 두개가 되어, 한 쪽이 수정된다면 다른 한 쪽도 수정되는 방식으로, 원본 파일이나 하드링크 파일이 삭제되어도 하나 이상 남아있다면 (inode가 남아있다면) 나머지 파일은 삭제되지 않는다.
 - 심볼릭링크: 바로가기와 같은 개념으로, 원본파일에 연결할 수 있는 링크를 생성하는 방식으로, inode가 가르키는 파일은 원본파일의 주소를 가르킨다. 때문에 링크파일이 삭제 되어도 원본 파일은 그대로 남아있지만 원본 파일이 삭제된다면 파일의 심볼릭링크들은 사용할 수 없다.
+
+- symboliclink 
+(원본파일이나 디렉토리를 가리키는 참조역할)
+ex)  ubuntu@test:~$ ln -s ./test ./test22 
+ -> ln : 링크생성 명령어
+    -s : 심볼릭 링크 생성하도록 지정
+    ./test : 현재 디렉토리에 있는 파일이나 디렉토리를 가리키는 링크생성
+    ./test22 : 새로 생성할 심볼릭 링크의 이름을 지정
+symboliclink -> 주소
+(원본의 내용을 갖고있지 않기 때문에 원본파일이 삭제되지 않는 한 원본파일이 손상될 일 없음.
+원본파일이 삭제되면 링크도 더이상 유효하지 않음.
+symboliclink가 삭제되더라도 원본파일은 그대로 유지됨.)
+
+- hardlink
+ex) ubuntu@test:~$ ln /var/log/syslog /home/user/syslog
+ -> /var/log/syslog 파일을 /home/user/syslog 이라는 이름의 하드링크로 연결
+ /var/log/syslog : 원본파일의 경로
+ /home/user/syslog : 생성될 하드링크의 경로
+ hardlink -> (파일)내용
+ (hardlink는 원본과 같은 inode를 가지기 때문에 원본파일과 하드링크를 구분할 수 없음.
+ 원본파일이 삭제되더라도 하드링크가 존재하는 한 계속해서 접근가능.)
+
+- inode : 파일수
+ex) 
+ubuntu@test:~$ ll -> 전체파일보기
+ubuntu@test:~$ mkdir new -> new파일 생성
+ubuntu@test:~$ cd new -> new파일로 가기
+ubuntu@test:~/new$ ll -> new의 inode는2
+                        .
+                        ..
+                        이 포함되어있기 때문
+ubuntu@test:~/new$ mkdir sub -> new파일안에
+                                sub파일 생성
+ubuntu@test:~/new$ ll -> sub포함 3갠
+
+# 1. RunLevel
+(시스템 관리를 용이하게 하기 위함)
+- 0~6(총 7개의 런 레벨이 있음)
+    0 (halt) 
+        : 시스템 중지, 기본값으로 설정 불가
+    1 (single user mode) 
+        : 단일 사용자 모드
+    2 (multiuser,without NFS) 
+        : 네트워크를 사용하지 않는 다중 사용자 모드
+    3 (Full multiuser mode)
+        : 네트워크를 지원하는 다중 사용자 모드
+    4 (Unused)
+        : 사용되지 않는 런레벨이지만 사용자가 정의해서 사용 가능
+    5 (Xll)
+        : X Window를 사용하는 다중 사용자 모드(그래픽 인터페이스)
+    6 (Reboot)
+        : 시스템을 재기동할 때 사용, 기본값으로 설정불가
+- ftpd
+- sshd
+- httpd
+
+# 2. 리눅스 네트워크
+# 3. Http Web Server
+# 4. Shall Script
+# 5. crontap
+. rc (run command : 실행명령)
+. Front End Framework
+. 디자인 패턴
+
+# 실습해보기
+## 리눅스 서버구축하기
+- 기본 사용자 생성(sudo사용)
+- 웹 서버 설치
+- 도메인 연결
+
+# FrontEnd
+- HTML
+    - React.js
+    -> javascript 라이브러리
+    - React 사용자 인터페이스 만들기
+- JS(자바 스크립트)
+- CSS(문자 스타일 디자인)
+    - tailwindcss 라이브러리 참조하기
+
+- 도메인 인증 하는 법
+하나의 도메인 인증할 때 : ubuntu@linux:/etc/nginx/sites-enabled$ sudo certbot --nginx -d 도메인주소 
+여러개 인증할 때 : ubuntu@linux:/etc/nginx/sites-enabled$ sudo certbot --nginx -d 도메인주소 -d 도메인주소 -d 도메인주소...
+
+- crontab 
+ ex) ubuntu@linux:~$ sudo crontab -l
+-> 
+MAILTO=""
+30 06 * * * /usr/sbin/nsight_updater > /tmp/.nu.log 2> /tmp/.nu_err.log
